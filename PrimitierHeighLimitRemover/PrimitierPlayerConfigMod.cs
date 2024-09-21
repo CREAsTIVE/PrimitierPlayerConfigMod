@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using PrimitierPlayerConfig.Excpetions;
 using System.Collections;
 using System.Data;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,17 +22,64 @@ namespace PrimitierPlayerConfig
 			base.OnEarlyInitializeMelon();
 			Logger = LoggerInstance;
 		}
+
+		public static GameObject AvatarParent = null!;
+		public static GameObject Player = null!;
+		public static GameObject XROriginObject = null!;
+		public static XROrigin XROrigin = null!;
+		public static GameObject VRMModel = null!;
+
+		public static JObject Config = null!;
+
+		IEnumerator WaitForAvatar()
+		{
+			LoggerInstance.Msg("Waiting for avatar...");
+
+			while (AvatarParent.transform.childCount <= 0)
+				yield return new WaitForEndOfFrame();
+			yield return new WaitForSeconds(0.5f);
+
+			VRMModel = AvatarParent.transform.GetChild(0).gameObject;
+
+			LoggerInstance.Msg($"Avatar loaded! Avatar enabled status: {VRMModel.active}");
+
+			// All lateinit vars was initialized!
+
+			OnAvatarWasLoaded();
+		}
+
+		public void OnAvatarWasLoaded()
+		{
+			if (Config.TryGetValue("overrideFields", out var overrideData))
+			{
+				FieldOverrider fieldOverrider = new(overrideData as JObject ?? throw new RuntimeArgumentException("\"override\" field in config file should be a object"));
+				fieldOverrider.OverrideFileds();
+			}
+
+			if (((bool?)Config["fixWorldScale"]) == true)
+			{
+				new ScaleFixer().FixScale();
+			}
+		}
+
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName)
 		{
 			base.OnSceneWasInitialized(buildIndex, sceneName);
 
-			var player = GameObject.Find("Player");
+			// Loading vars:
 
-			if (player == null)
+			AvatarParent = GameObject.Find("AvatarParent");
+			Player = GameObject.Find("Player");
+			XROriginObject = GameObject.Find("XR Origin");
+			XROrigin = XROriginObject.GetComponent<XROrigin>();
+
+			/*if (Utils.NoneIsNull(AvatarParent, Player, XROrigin, XROriginObject))
 			{
-				LoggerInstance.Error("NO PLAYER FOUND!!!");
+				LoggerInstance.Error($"One of GO didn't found: {AvatarParent==null}, {Player==null}, {XROrigin==null}, {XROriginObject==null}");
 				return;
-			}
+			}*/
+
+			// Loading config:
 
 			string configFilePath = Il2CppSystem.Environment.GetFolderPath(Il2CppSystem.Environment.SpecialFolder.MyDocuments)
 				+ Il2CppSystem.IO.Path.DirectorySeparatorStr + "Primitier"
@@ -42,33 +90,10 @@ namespace PrimitierPlayerConfig
 				return;
 			}
 
-			JObject configFile = JObject.Parse(Il2CppSystem.IO.File.ReadAllText(configFilePath));
+			Config = JObject.Parse(Il2CppSystem.IO.File.ReadAllText(configFilePath));
 
-			if (configFile.TryGetValue("overrideFields", out var overrideData))
-			{
-				FieldOverrider fieldOverrider = new(overrideData as JObject ?? throw new RuntimeArgumentException("\"override\" field in config file should be a object"));
-				fieldOverrider.OverrideFileds();
-			}
-
-			if (((bool?)configFile["fixWorldScale"]) == true)
-				MelonCoroutines.Start(new ScaleFixer() { }.FixScale());
-
-			//new ReflectedProperty("Player.baseSpeed", playerMovement, "baseSpeed").set(1);
+			MelonCoroutines.Start(WaitForAvatar());
 		}
-
-		string varsResolver(string input)
-		{
-			Dictionary<string, string> vars = new()
-			{
-
-			};
-
-			foreach (var v in vars) { input = input.Replace($"${v.Key}", v.Value); }
-
-			return input;
-		}
-		public static GameObject findGO(string name) =>
-			GameObject.FindObjectsOfTypeAll(Il2CppType.Of<Transform>()).Select(e => e.Cast<Transform>()).First(t => t.gameObject.name == name).gameObject;
 
 		
 	}

@@ -34,4 +34,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[assembly: MelonInfo(typeof(PrimitierPlayerConfig.PrimitierPlayerConfigMod), "Player config changer", "1.3.1", "CREAsTIVE")]
+[assembly: MelonInfo(typeof(PrimitierPlayerConfig.PrimitierPlayerConfigMod), "Player config changer", "1.3.4", "CREAsTIVE")]

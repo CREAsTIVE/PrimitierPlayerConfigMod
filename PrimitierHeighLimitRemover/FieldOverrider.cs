@@ -1,4 +1,5 @@
-﻿using Il2CppInterop.Runtime;
+﻿using Il2Cpp;
+using Il2CppInterop.Runtime;
 using MathParserTK;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,6 +18,17 @@ namespace PrimitierPlayerConfig
 		public FieldOverrider(JObject overrides)
 		{
 			this.overrides = overrides;
+		}
+		static string resolveVariables(string input)
+		{
+			Dictionary<string, string> vars = new()
+			{
+				{ "avatarHeight",  HeightCalibrator.avatarHeight.FString() }
+			};
+
+			foreach (var v in vars) { input = input.Replace($"${v.Key}", v.Value); }
+
+			return input;
 		}
 
 		public void OverrideFileds()
@@ -41,15 +53,23 @@ namespace PrimitierPlayerConfig
 
 				var resolved = FieldResolver.resolveObject(baseObject, path);
 
-				if (resolved.field.FieldType.IsEquivalentTo(Il2CppType.Of<float>()))
-					resolved.field.SetValue(resolved.container, asFloat(pair.Value));
+				if (resolved.fieldType.IsEquivalentTo(Il2CppType.Of<float>()))
+					resolved.setter(asFloat(pair.Value));
 				else
-					throw new NotImplementedException($"Value {resolved.field.FieldType.FullName} didn't supported :(");
+					throw new NotImplementedException($"Value {resolved.fieldType.FullName} didn't supported :(");
 			}
 		}
 
-		static MathParser parser = new MathParser();
-		static double Compute(string expr) => parser.Parse(expr);
+		static MathParser parser = new MathParser('.');
+		static double Compute(string expr)
+		{
+
+			string resolved = resolveVariables(expr);
+			PrimitierPlayerConfigMod.Logger?.Msg($"Calculating {resolved}");
+			return parser.Parse(resolved);
+
+		
+		}
 		static float ComputeFloat(string expr) => (float)Compute(expr);
 
 		float asFloat(JToken? token)
