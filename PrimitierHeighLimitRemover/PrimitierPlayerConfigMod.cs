@@ -1,6 +1,8 @@
 ﻿using Il2Cpp;
 using Il2CppInterop.Runtime;
 using Il2CppSystem.IO;
+using Il2CppSystem.Linq.Expressions.Interpreter;
+using Il2CppSystem.Xml;
 using MathParserTK;
 using MelonLoader;
 using Mono.CSharp;
@@ -83,9 +85,41 @@ namespace PrimitierPlayerConfig
 			if (((bool?)Config["fixWorldScale"]) == true)
 				new ScaleFixer().FixScale();
 
+			/*if (((bool?)Config["fixLightWeightShake"]) == true)
+			{
+				var groudMovePowerMlp = PlayerMovement.groundMovePowerMlp;
+				var playerMovment = XROrigin.GetComponent<PlayerMovement>();
+				FixedUpdateAction += () =>
+					PlayerMovement.groundMovePowerMlp = playerMovment.isMoving ? groudMovePowerMlp : 0;
+			}*/
+
+			
+
 			if (((bool?)Config["stickPointerToHand"]) == true)
 			{
-				(Grabber grabber, Joint joint, bool lastFrameState, float storedMassScale, float storedConnectedMassScale) makeHand(GameObject handGO)
+				var leftHand = GameObject.Find("LeftHand");
+				var rightHand = GameObject.Find("RightHand");
+
+				void fixHand(GameObject hand)
+				{
+					var collider = hand.AddComponent<SphereCollider>();
+					var rb = hand.GetComponent<Rigidbody>();
+
+					var c = rb.centerOfMass;
+					var i = rb.inertiaTensor;
+
+					GameObject.Destroy(collider);
+
+					rb.centerOfMass = c;
+					rb.inertiaTensor = i;
+				}
+					
+
+				fixHand(leftHand);
+				fixHand(rightHand);
+
+
+				/*(Grabber grabber, Joint joint, bool lastFrameState, float storedMassScale, float storedConnectedMassScale) makeHand(GameObject handGO)
 				{
 					(Grabber grabber, Joint joint, bool lastFrameState, float storedMassScale, float storedConnectedMassScale) hand = (
 						handGO.GetComponent<Grabber>(),
@@ -132,7 +166,7 @@ namespace PrimitierPlayerConfig
 
 					updatePerHand(ref leftHand);
 					updatePerHand(ref rightHand);
-				};
+				};*/
 			}
 		}
 
@@ -156,7 +190,6 @@ namespace PrimitierPlayerConfig
 
 			return JObject.Parse(Il2CppSystem.IO.File.ReadAllText(configFilePath));
 		}
-
 		public override void OnSceneWasInitialized(int buildIndex, string sceneName)
 		{
 			base.OnSceneWasInitialized(buildIndex, sceneName);

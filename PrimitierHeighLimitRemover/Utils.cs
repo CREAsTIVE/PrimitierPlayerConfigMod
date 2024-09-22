@@ -28,5 +28,11 @@ namespace PrimitierPlayerConfig
 			value.ToString("R", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
 		public static string DString(this double value) =>
 			value.ToString("R", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+
+		public static T Apply<T>(this T obj, Action<T> act)
+		{
+			act(obj);
+			return obj;
+		}
 	}
 }
