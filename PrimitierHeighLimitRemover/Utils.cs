@@ -26,5 +26,7 @@ namespace PrimitierPlayerConfig
 
 		public static string FString(this float value) =>
 			value.ToString("R", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
+		public static string DString(this double value) =>
+			value.ToString("R", System.Globalization.CultureInfo.GetCultureInfo("en-US"));
 	}
 }

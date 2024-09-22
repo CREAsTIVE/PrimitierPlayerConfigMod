@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace PrimitierPlayerConfig.Excpetions
 {
-	class RuntimeException : Exception { public RuntimeException(string msg) : base(msg) { } }
-	class RuntimeArgumentException : RuntimeException { public RuntimeArgumentException(string msg) : base(msg) { } }
+	public class RuntimeException : Exception { public RuntimeException(string msg) : base(msg) { } public RuntimeException(string msg, Exception inner) : base(msg, inner) { } }
+	public class RuntimeArgumentException : RuntimeException { public RuntimeArgumentException(string msg) : base(msg) { } }
 }

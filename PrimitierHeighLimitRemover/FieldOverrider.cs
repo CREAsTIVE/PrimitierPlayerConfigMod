@@ -1,5 +1,6 @@
 ﻿using Il2Cpp;
 using Il2CppInterop.Runtime;
+using Il2CppSystem;
 using MathParserTK;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,25 +14,44 @@ namespace PrimitierPlayerConfig
 {
 	internal class FieldOverrider
 	{
-		JObject overrides;
-
-		public FieldOverrider(JObject overrides)
+		Dictionary<string, string> context = new()
 		{
-			this.overrides = overrides;
+			{ "avatarHeight",  HeightCalibrator.avatarHeight.FString() }
+		};
+
+		public FieldOverrider()
+		{
+			
 		}
-		static string resolveVariables(string input)
+		string resolveVariables(string input)
 		{
-			Dictionary<string, string> vars = new()
-			{
-				{ "avatarHeight",  HeightCalibrator.avatarHeight.FString() }
-			};
-
-			foreach (var v in vars) { input = input.Replace($"${v.Key}", v.Value); }
-
+			foreach (var v in context) { input = input.Replace($"${v.Key}", v.Value); }
 			return input;
 		}
 
-		public void OverrideFileds()
+		public void DefineVariables(JObject variables)
+		{
+			foreach (var pair in variables)
+			{
+				try
+				{
+					context[pair.Key] = pair.Value?.Type switch
+					{
+						JTokenType.String => Compute(((string?)pair.Value)!).DString(),
+						JTokenType.Float => ((float)pair.Value).FString(),
+						JTokenType.Boolean => ((bool)pair.Value) ? "1" : "0",
+						JTokenType.Integer => ((int)pair.Value).ToString(),
+						_ => throw new System.NotImplementedException($"Type {pair.Value?.Type} doesn't support!")
+					};
+				} catch (System.Exception ex)
+				{
+					PrimitierPlayerConfigMod.Logger?.Warning(ex);
+					PrimitierPlayerConfigMod.Logger?.Warning($"Failed to calculate variable {pair.Key}. Skipping...");
+				}
+			}
+		}
+
+		public void OverrideFileds(JObject overrides)
 		{
 			Dictionary<string, Il2CppSystem.Object> mappedObjects = new()
 			{
@@ -40,28 +60,35 @@ namespace PrimitierPlayerConfig
 
 			foreach (var pair in overrides)
 			{
-				IEnumerable<string> path = pair.Key.Split(".");
-				string baseKey = path.First();
-				path = path.Skip(1);
+				try
+				{
+					IEnumerable<string> path = pair.Key.Split(".");
+					string baseKey = path.First();
+					path = path.Skip(1);
 
-				Il2CppSystem.Object baseObject;
+					Il2CppSystem.Object baseObject;
 
-				if (mappedObjects.TryGetValue(baseKey, out var obj))
-					baseObject = obj;
-				else
-					baseObject = GameObject.Find(baseKey);
+					if (mappedObjects.TryGetValue(baseKey, out var obj))
+						baseObject = obj;
+					else
+						baseObject = GameObject.Find(baseKey);
 
-				var resolved = FieldResolver.resolveObject(baseObject, path);
+					var resolved = FieldResolver.resolveObject(baseObject, path);
 
-				if (resolved.fieldType.IsEquivalentTo(Il2CppType.Of<float>()))
-					resolved.setter(asFloat(pair.Value));
-				else
-					throw new NotImplementedException($"Value {resolved.fieldType.FullName} didn't supported :(");
+					if (resolved.fieldType.IsEquivalentTo(Il2CppType.Of<float>()))
+						resolved.setter(asFloat(pair.Value));
+					else
+						throw new System.NotImplementedException($"Value {resolved.fieldType.FullName} didn't supported :(");
+				} catch (System.Exception ex)
+				{
+					PrimitierPlayerConfigMod.Logger?.Warning(ex);
+					PrimitierPlayerConfigMod.Logger?.Warning($"Can't change \"{pair.Key}\" to {pair.Value }. Skipping...");
+				}
 			}
 		}
 
 		static MathParser parser = new MathParser('.');
-		static double Compute(string expr)
+		double Compute(string expr)
 		{
 
 			string resolved = resolveVariables(expr);
@@ -70,14 +97,14 @@ namespace PrimitierPlayerConfig
 
 		
 		}
-		static float ComputeFloat(string expr) => (float)Compute(expr);
+		float ComputeFloat(string expr) => (float)Compute(expr);
 
 		float asFloat(JToken? token)
 		{
 			if (token?.Type == JTokenType.String)
 				return ComputeFloat(((string?)token) ?? throw new("idk"));
 			else
-				return token?.Value<float>() ?? throw new ArgumentException("Float");
+				return token?.Value<float>() ?? throw new System.ArgumentException("Float");
 		}
 	}
 }

@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "PrimitierPlayerConfig": {
+      "commandName": "Project"
+    },
+    "Copy": {
+      "commandName": "Project",
+      "commandLineArgs": "cp C:\\Users\\UserPC\\Source\\Repos\\PrimitierHeighLimitRemover\\PrimitierHeighLimitRemover\\bin\\Release\\net6.0\\publish\\PrimitierPlayerConfig.dll D:\\Games\\steamapps\\common\\Primitier\\Mods\\PrimitierPlayerConfig.dll;\r\n\r\ncpC:\\Users\\UserPC\\Source\\Repos\\PrimitierHeighLimitRemover\\PrimitierHeighLimitRemover\\bin\\Release\\net6.0\\publish\\PrimitierPlayerConfig.pdb D:\\Games\\steamapps\\common\\Primitier\\Mods\\PrimitierPlayerConfig.pdb;"
+    }
+  }
+}

@@ -19,24 +19,6 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Boo.Lang">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Boo.Lang.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Compiler">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Boo.Lang.Compiler.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Extensions">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Boo.Lang.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Parser">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Boo.Lang.Parser.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.PatternMatching">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Boo.Lang.PatternMatching.dll</HintPath>
-    </Reference>
-    <Reference Include="Boo.Lang.Useful">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Boo.Lang.Useful.dll</HintPath>
-    </Reference>
     <Reference Include="Commons.Xml.Relaxng">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\Commons.Xml.Relaxng.dll</HintPath>
     </Reference>
@@ -46,32 +28,35 @@
     <Reference Include="CustomMarshalers">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\CustomMarshalers.dll</HintPath>
     </Reference>
-    <Reference Include="I18N">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\I18N.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N.CJK">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\I18N.CJK.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N.MidEast">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\I18N.MidEast.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N.Other">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\I18N.Other.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N.Rare">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\I18N.Rare.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N.West">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\I18N.West.dll</HintPath>
-    </Reference>
-    <Reference Include="IBM.Data.DB2">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\IBM.Data.DB2.dll</HintPath>
-    </Reference>
     <Reference Include="Il2CppInterop.Runtime">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\net6\Il2CppInterop.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2Cppmscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Configuration">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Core">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Data">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Numerics">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Runtime.Serialization">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Xml">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppSystem.Xml.Linq">
+      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Il2CppAssemblies\Il2CppSystem.Xml.Linq.dll</HintPath>
     </Reference>
     <Reference Include="MelonLoader">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\net6\MelonLoader.dll</HintPath>
@@ -234,15 +219,6 @@
     </Reference>
     <Reference Include="System.Web.Services">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\System.Web.Services.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor">
-      <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms">
       <HintPath>D:\Games\steamapps\common\Primitier\MelonLoader\Managed\System.Windows.Forms.dll</HintPath>
