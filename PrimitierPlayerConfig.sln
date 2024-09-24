@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PrimitierPlayerConfig", "PrimitierHeighLimitRemover\PrimitierPlayerConfig.csproj", "{805C8B47-D65D-4F56-9E93-86E50AEEC19C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{C5213483-C076-46DC-8FB6-C6419DBF8450}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{805C8B47-D65D-4F56-9E93-86E50AEEC19C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{805C8B47-D65D-4F56-9E93-86E50AEEC19C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{805C8B47-D65D-4F56-9E93-86E50AEEC19C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5213483-C076-46DC-8FB6-C6419DBF8450}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5213483-C076-46DC-8FB6-C6419DBF8450}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5213483-C076-46DC-8FB6-C6419DBF8450}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5213483-C076-46DC-8FB6-C6419DBF8450}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

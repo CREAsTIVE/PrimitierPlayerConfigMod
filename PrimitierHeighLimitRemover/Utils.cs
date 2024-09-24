@@ -34,5 +34,14 @@ namespace PrimitierPlayerConfig
 			act(obj);
 			return obj;
 		}
+
+		public static void ForEach<T>(this IEnumerable<T> enumerable, Action<T> action)
+		{
+			foreach (var item in enumerable)
+				action(item);
+		}
+
+		public static Vector3 withY(this Vector3 value, float y) =>
+			new Vector3(value.x, y, value.z);
 	}
 }

@@ -8,6 +8,7 @@ using MelonLoader;
 using Mono.CSharp;
 using Newtonsoft.Json.Linq;
 using PrimitierPlayerConfig.Excpetions;
+using PrimitierPlayerConfig.Patches;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
@@ -16,7 +17,7 @@ using UnityEngineInternal.Input;
 
 namespace PrimitierPlayerConfig
 {
-	public class PrimitierPlayerConfigMod : MelonMod
+    public class PrimitierPlayerConfigMod : MelonMod
 	{
 		public static MelonLogger.Instance? Logger;
 		public override void OnEarlyInitializeMelon()
@@ -59,7 +60,7 @@ namespace PrimitierPlayerConfig
 			OnAvatarWasLoaded();
 		}
 
-		FieldOverrider fieldOverrider = null!;
+		FieldOverrider.FieldOverrider fieldOverrider = null!;
 
 		public override void OnUpdate()
 		{
@@ -72,6 +73,7 @@ namespace PrimitierPlayerConfig
 
 		void LoadOverrides(JObject config)
 		{
+			fieldOverrider.ResetEnv();
 			if (config.TryGetValue("variables", out var vars))
 				fieldOverrider.DefineVariables(vars as JObject ?? throw new RuntimeArgumentException("\"variables\" field in config should be a object"));
 			if (config.TryGetValue("overrideFields", out var overrideData))
@@ -84,40 +86,40 @@ namespace PrimitierPlayerConfig
 
 			if (((bool?)Config["fixWorldScale"]) == true)
 				new ScaleFixer().FixScale();
-
-			/*if (((bool?)Config["fixLightWeightShake"]) == true)
-			{
-				var groudMovePowerMlp = PlayerMovement.groundMovePowerMlp;
-				var playerMovment = XROrigin.GetComponent<PlayerMovement>();
-				FixedUpdateAction += () =>
-					PlayerMovement.groundMovePowerMlp = playerMovment.isMoving ? groudMovePowerMlp : 0;
-			}*/
-
 			
-
+			// FIXME: On any mass change (smart hooks)
 			if (((bool?)Config["stickPointerToHand"]) == true)
 			{
 				var leftHand = GameObject.Find("LeftHand");
 				var rightHand = GameObject.Find("RightHand");
-
-				void fixHand(GameObject hand)
+				void fixHands()
 				{
-					var collider = hand.AddComponent<SphereCollider>();
-					var rb = hand.GetComponent<Rigidbody>();
+					Logger?.Msg("Fixing hands...");
 
-					var c = rb.centerOfMass;
-					var i = rb.inertiaTensor;
+					void fixHand(GameObject hand)
+					{
+						var rb = hand.GetComponent<Rigidbody>();
 
-					GameObject.Destroy(collider);
+						rb.ResetInertiaTensor();
 
-					rb.centerOfMass = c;
-					rb.inertiaTensor = i;
+						var collider = hand.AddComponent<SphereCollider>();
+
+						var c = rb.centerOfMass;
+						var i = rb.inertiaTensor;
+
+						GameObject.Destroy(collider);
+
+						rb.centerOfMass = c;
+						rb.inertiaTensor = i;
+						
+					}
+
+					fixHand(leftHand);
+					fixHand(rightHand);
 				}
-					
 
-				fixHand(leftHand);
-				fixHand(rightHand);
-
+				fixHands();
+				AvatarHeightChangeHook.OnValueChange += fixHands;
 
 				/*(Grabber grabber, Joint joint, bool lastFrameState, float storedMassScale, float storedConnectedMassScale) makeHand(GameObject handGO)
 				{
