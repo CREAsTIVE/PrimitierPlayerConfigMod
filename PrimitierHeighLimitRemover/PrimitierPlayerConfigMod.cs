@@ -1,23 +1,14 @@
-﻿using Il2Cpp;
-using Il2CppInterop.Runtime;
-using Il2CppSystem.IO;
-using Il2CppSystem.Linq.Expressions.Interpreter;
-using Il2CppSystem.Xml;
-using MathParserTK;
-using MelonLoader;
-using Mono.CSharp;
+﻿using MelonLoader;
 using Newtonsoft.Json.Linq;
 using PrimitierPlayerConfig.Excpetions;
 using PrimitierPlayerConfig.Patches;
 using System.Collections;
 using Unity.XR.CoreUtils;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngineInternal.Input;
 
 namespace PrimitierPlayerConfig
 {
-    public class PrimitierPlayerConfigMod : MelonMod
+	public class PrimitierPlayerConfigMod : MelonMod
 	{
 		public static MelonLogger.Instance? Logger;
 		public override void OnEarlyInitializeMelon()

@@ -1,6 +1,6 @@
 ﻿using Il2CppSystem.Linq.Expressions;
 using Il2CppSystem.Reflection;
-using MathParserTK;
+using PrimitierPlayerConfig.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PrimitierPlayerConfig.FieldOverrider
 {
-	public class Environment
+    public class Environment
 	{
 		public Environment(List<Variable> defaultVariables)
 		{
@@ -57,7 +57,7 @@ namespace PrimitierPlayerConfig.FieldOverrider
 	{
 		protected LinkedList<HookedVariable> notifyChildrenHooked = new();
 		public virtual void OnParentValueChange() =>
-			notifyChildrenHooked.ForEach(hook => hook.OnParentValueChange());
+notifyChildrenHooked.ForEach(hook => hook.OnParentValueChange());
 
 		// This variable value depends on hook variable value
 		public void HookFor(HookedVariable hook) => hook.notifyChildrenHooked.AddLast(this);

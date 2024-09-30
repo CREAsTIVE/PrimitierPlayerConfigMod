@@ -3,6 +3,7 @@ using Il2CppInterop.Runtime.Runtime;
 using Il2CppSystem.Reflection;
 using MelonLoader;
 using PrimitierPlayerConfig.Patches;
+using PrimitierPlayerConfig.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ using UnityEngine.UI;
 
 namespace PrimitierPlayerConfig
 {
-	class ScaleFixer
+    class ScaleFixer
 	{
 		GameObject cameraOffsetObject = null!;
 		List<GameObject> scaleBackObjects = new List<GameObject>();
@@ -32,8 +33,8 @@ namespace PrimitierPlayerConfig
 			if (PrimitierPlayerConfigMod.VRMModel.active)
 				OnAvatarEnabled();
 
-			var avatarBtn = Utils.findGO("AvatarVisibilityButton").GetComponent<Button>();
-			var calibrateBtn = Utils.findGO("RecalibrateButton").GetComponent<Button>();
+			var avatarBtn = UnityUtils.FindGameObject("AvatarVisibilityButton")?.GetComponent<Button>() ?? throw new("Can't find a button");
+			var calibrateBtn = UnityUtils.FindGameObject("RecalibrateButton")?.GetComponent<Button>() ?? throw new("Can't find a button");
 
 			avatarBtn.onClick.AddListener(new Action(() => {
 				if (PrimitierPlayerConfigMod.VRMModel.active)

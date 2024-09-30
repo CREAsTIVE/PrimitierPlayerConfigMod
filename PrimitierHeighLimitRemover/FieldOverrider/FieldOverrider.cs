@@ -1,16 +1,10 @@
-﻿using Il2Cpp;
+﻿
+using Il2Cpp;
 using Il2CppInterop.Runtime;
-using Il2CppSystem;
-using MathParserTK;
 using Newtonsoft.Json.Linq;
 using PrimitierPlayerConfig.Patches;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PrimitierPlayerConfig.Utils;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace PrimitierPlayerConfig.FieldOverrider
 {
@@ -74,26 +68,39 @@ namespace PrimitierPlayerConfig.FieldOverrider
             }
         }
 
-        public void OverrideFileds(JObject overrides)
+        (Il2CppSystem.Object? obj, Il2CppSystem.Type type)? ResolveBaseObject(string name)
         {
-            Dictionary<string, Il2CppSystem.Object> mappedObjects = new()
-            {
-                { "Player", GameObject.Find("Player")}
-            };
+            if (name[0] == '#')
+                return UnityUtils.FindObjectOfTypeName(name.Substring(1))?.Let(t => (t, t.GetIl2CppType()));
+            else if (name[0] == '%')
+                return Il2CppUtils.GetIl2CppTypeByName(name.Substring(1))?.Let<Il2CppSystem.Type, (Il2CppSystem.Object? obj, Il2CppSystem.Type type)>(t => (null, t));
+            return (
+                mappedObjects.GetValueOrDefault(name) ??
+                UnityUtils.FindGameObject(name) // UnityUtils.FindObject(obj => obj.name == name);
+			)?.Let(t => (t, t.GetIl2CppType()));
+        }
 
+		Dictionary<string, Il2CppSystem.Object> mappedObjects = new()
+		{
+			{ "Player", GameObject.Find("Player")}
+		};
+
+		public void OverrideFileds(JObject overrides)
+        {
             foreach (var pair in overrides)
             {
                 try
                 {
-                    IEnumerable<string> path = pair.Key.Split(".");
+                    IEnumerable<string> path = 
+                        pair.Key.Contains(":") ? pair.Key.Split(":").Let(s => s.SkipLast(1).Concat(s.Last().Split("."))) : pair.Key.Split(".");
                     string baseKey = path.First();
                     path = path.Skip(1);
 
-                    Il2CppSystem.Object baseObject;
+                    var baseObject = ResolveBaseObject(baseKey) ?? throw new($"Base object \"{baseKey}\" didn't found");
 
-                    baseObject = mappedObjects.TryGetValue(baseKey, out var obj) ? obj : Utils.findGO(baseKey);
+                    //baseObject = mappedObjects.TryGetValue(baseKey, out var obj) ? obj : Utils.FindGameObject(baseKey);
 
-                    var resolved = FieldResolver.resolveObject(baseObject, path);
+                    var resolved = FieldResolver.resolveObject(baseObject.obj, baseObject.type, path);
 
                     if (resolved.fieldType.IsEquivalentTo(Il2CppType.Of<float>()))
                     {
